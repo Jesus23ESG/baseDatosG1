@@ -77,9 +77,9 @@ Create table telefonoproveedor(
   numerotelefono varchar(15),
   constraint pk_telefono_proveedor
   primary key(telefonoid,proveedorid), 
-  constraint fk_telefonoprov_proveedor
-  foreign key(proveedorid)
-  references proveedor(proveedorid)
+
+  constraint fk_telefonoprov_proveedor foreign key(proveedorid) references proveedor(proveedorid)
+  
   on delete cascade
   on update cascade 
 )
