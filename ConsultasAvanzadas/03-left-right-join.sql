@@ -45,5 +45,7 @@ values
 ('Producto1', 45.5, 33, 2),
 ('Producto1', 22.34, 666, 3);
 
-select * from proveedor
+select * from proveedor as p
+inner join productos as pr
+on pr.proveedor = provid
 

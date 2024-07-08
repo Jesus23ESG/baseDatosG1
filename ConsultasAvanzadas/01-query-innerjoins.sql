@@ -144,7 +144,7 @@ from northwind.dbo.Products;
 -- Nombre del Empleado (Employees)
 -- Pedido
 
-use Northwind;
+use NORTHWND;
 
 select o.customerId, o.Employeeid, o.orderid, o.orderdate 
 from 
@@ -192,13 +192,48 @@ INNER JOIN Suppliers AS s
 ON p.SupplierID = s.SupplierID
 
 --Ejercicio 5: Mostrar el nombre del proveedor, el nombre del contacto y el teléfono del contacto para cada proveedor.
+select CompanyName, ContactName, Phone 
+from Suppliers
 
 --Ejercicio 6: Listar el nombre del producto, la categoría del producto y el nombre del proveedor para cada producto.
---Ejercicio 7: Obtener el nombre del cliente, el ID del pedido, el nombre del producto y la cantidad del producto para cada detalle del pedido.
---Ejercicio 8: Obtener el nombre del empleado, el nombre del territorio y la región del territorio para cada empleado que tiene asignado un territorio.
---Ejercicio 9: Mostrar el nombre del cliente, el nombre del transportista y el nombre del país del transportista para cada pedido enviado por un transportista.
---Ejercicio 10: Obtener el nombre del producto, el nombre de la categoría y la descripción de la categoría para cada producto que pertenece a una categoría.
+select p.ProductName as 'nombre del producto', s.CompanyName as 'nombre del proveedor', c.CategoryName as 'categoria'
+from Products as p
+inner join Suppliers as s 
+on p.SupplierID = s.SupplierID
+inner join Categories as c
+on c.CategoryID = p.CategoryID
 
+--Ejercicio 7: Obtener el nombre del cliente, el ID del pedido, el nombre del producto y la cantidad del producto para cada detalle del pedido.
+select CompanyName as 'NombreCliente', o.OrderID as 'IdPedido', p.ProductName as 'NombreProducto', od.Quantity as 'CantidadProducto'
+from Customers as c
+inner join orders as o
+on c.CustomerID = o.CustomerID
+inner join [Order Details] as od
+on o.OrderID = od.OrderID
+inner join Products as p
+on p.ProductID = od.ProductID
+
+--Ejercicio 8: Obtener el nombre del empleado, el nombre del territorio y la región del territorio para cada empleado que tiene asignado un territorio.
+select concat(e.FirstName, ' ', e.LastName) as 'NombreEmpleado', t.TerritoryDescription 'NombreTerritorio', r.RegionDescription as 'RegionTerritorio'
+from Employees as e
+inner join EmployeeTerritories as et
+on e.EmployeeID = et.EmployeeID
+inner join Territories as t
+on t.TerritoryID = et.TerritoryID
+inner join region as r
+on r.RegionID = t.RegionID;
+--Ejercicio 9: Mostrar el nombre del cliente, el nombre del transportista y el nombre del país del transportista para cada pedido enviado por un transportista.
+select c.CompanyName as 'NombreCliente', sh.CompanyName as 'NombreTransportista', o.ShipCountry as 'PaísTransportista'
+from Customers as c
+inner join Orders as o
+on c.CustomerID = o.CustomerID
+inner join Shippers as sh
+on sh.ShipperID = o.ShipVia;
+--Ejercicio 10: Obtener el nombre del producto, el nombre de la categoría y la descripción de la categoría para cada producto que pertenece a una categoría.
+select p.ProductName as 'NombreProducto', c.CategoryName as 'NombreCategoría', c.Description as 'DescripciónCategiría'
+from Products as p
+inner join Categories as c
+on c.CategoryID = p.CategoryID;
 
 --Ejercicio 11. Seleccionar el total de ordenes hechas por cada uno de los proveedores 
 
@@ -273,8 +308,13 @@ order by 'Total de ventas' desc;
 
 
 --Ejercicio 14. Seleccionar el total de dinero vendido por categoria y dentro por producto
+select c.CategoryName as 'NombreCategoria', sum(od.Quantity * od.UnitPrice) as 'Total'
+from [Order Details] as od
+    inner join Products as p
+    on od.ProductID = p.ProductID
+    inner join Categories as c
+    on c.CategoryID = p.CategoryID
+GROUP by  c.CategoryName, p.ProductName;
 
 
 
-
-select getdate()

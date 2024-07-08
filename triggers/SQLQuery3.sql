@@ -1,101 +1,90 @@
-Create database Pruebatriggers;
-Go
 
-Use Pruebatriggers;
-Go
 
- Create table Empleado(
- Idempleado int not null primary key, 
- NombreEmplado varchar(30) not null,
- Apellido1 varchar(15) not null,
- Apellido2 varchar(15) null,
- Salario money not null
- );
- Go
+create database PruebaTriggersG1;
 
- Create or alter trigger tg_1
- on Empleado 
- after insert
- as 
- begin
-	print 'Se ejecuto el trigger tg_1, en el evento insert'
- end;
- Go
+use PruebaTriggersG1;
 
- select * from Empleado
+create table Empleado(
+	idempleado int not null primary key,
+	nombreempleado varchar(30) not null,
+	apellido1 varchar(15) not null,
+	apellido2 varchar(15),
+	salario money not null
+);
+go
 
- insert into Empleado 
- values(2, 'Rocio', 'Cruz', 'Cervantes', 80000)
- Go
-	
-drop trigger tg_1;
-Go
+/*create or alter trigger tg_1
+on empleado
+after insert 
+as
+begin
+	print 'Se ejecutó el trigger tg_1 en el evento insert'
+end;
+go*/
+
+--select * from empleado;
+
+insert into Empleado
+values (2, 'Rocio', 'Cruz', 'Cervantes', 8000);
+
+drop trigger tg_1
 
 create or alter trigger tg_2
 on empleado
-after insert 
+after insert
 as
 begin
 	select * from inserted;
 	select * from deleted;
 end;
-Go
-
-create or alter trigger tg_3
-on empleado 
-after deleted
-as 
-begin
-	select * from inserted;
-	select * from deleted;
-end;
-Go
- 
- insert into Empleado 
- values(2, 'Rocio', 'Cruz', 'Cervantes', 80000)
- Go
-
- delete empleado 
- where Idempleado = 2;
-
-create or alter trigger tg_4
-on empleado 
-after update
-as 
-begin
-	select * from inserted;
-	select * from deleted;
-end;
-Go
-
-select * from Empleado;
-
-update Empleado
-set NombreEmplado = 'Pancracio', 
-salario = 10000
-where idempleado = 1;
 go
 
-create or alter trigger tg_5
-on Empleado 
-after insert, delete
-as 
+create or alter trigger tg_3
+on empleado
+after delete
+as
 begin
-	if exists (select 1 from inserted)
+	select * from inserted;
+	select * from deleted;
+end;
+go
+
+delete empleado where idempleado = 2;
+
+create or alter trigger tg_4
+on empleado
+after update
+as
+begin
+	select * from inserted;
+	select * from deleted;
+end;
+go
+
+update empleado 
+set nombreempleado = 'Jose'
+where idempleado =1
+
+select * from empleado;
+
+create or alter trigger tg_5
+on empleado
+after insert, delete
+as
+begin
+	if exists(select 1 from inserted)
 	begin
-	print 'se realizo un insert'
+		print 'Se realizó un insert'
 	end
-	else if exists (select 1 from deleted)and 
-	not exists(select 1 from inserted)
-	begin 
-	print 'se realizo un delete' 
+	else if exists(select 1 from deleted) and not exists(select 1 from inserted)
+	begin
+		print 'Se realizó un delete'
 	end
- end;
-Go
+end;
+go
 
-insert into Empleado
-values (2, 'Leslie', 'Jimenez', 'Neri')
+insert into empleado
+values (2, 'Leslie', 'Delia', 'Nery', 10000)
 
-
-delete from Empleado
-where Idempleado = 2
+delete from empleado 
+where idempleado = 2

@@ -101,85 +101,49 @@ on c.idcatego= p.idcatego
 --existencia
 --nombre
 
-select c.idcatego, c.nombre, p.nombre, p.existencia, p.precio, (p.precio * p.existencia) as importe
+select c.idcategoria, c.nombre, p.nombre, p.existencia, p.precio, (p.precio*p.existencia) as importe
+from
+(select idcategoria, nombre from Categoria) as c
+inner join
+(select precio, existencia, idcategoria, nombre from Producto) as p
+on c.idcategoria = p.idcategoria;
+
+
+
+--left join
+select c.nombre, p.nombre, p.precio, p.existencia from Categoria as c 
+left join Producto as p 
+on c.idcategoria = p.idcategoria
+where p.idcategoria is null;
+
+--left join con tablas derivadas
+select c.nombre, p.nombre, p.precio, p.existencia
 from 
-(select idcatego,nombre from categoria) as c
-inner join 
-(select nombre, precio, existencia, idcatego from Producto) as p
-on c.idcatego = p.idcatego;
-
-use NORTHWND 
-
-select *
-from ( select OrderID, OrderDate, ShipCountry, RequiredDate from Orders) as o
-
-select *from 
-Categoria as c
-inner join producto as p
-on c.idcatego = p.idcatego
-inner join proveedor as pr
-on pr.idprov = p.proveedor;
-
---Left Join
-select c.nombre, p.nombre, p.precio, p.existencia 
-from categoria as c --left
+(select nombre, idcategoria from Categoria) as c
 left join
-Producto as p --right
-on c.idcatego = p.idcatego
-where p.idcatego is null;
-
-select c.nombre, p.nombre, p.precio, p.existencia 
-from ( select nombre,idcatego from categoria ) as c --left
-left join
-(select precio,existencia,idcatego, nombre from Producto) as p --right
-on c.idcatego = p.idcatego
-where p.idcatego is null;
-
-select c.nombre, p.nombre, p.precio, p.existencia 
-from categoria as c --left
-right join Producto as p --right
-on c.idcatego = p.idcatego
-
-insert into Producto
-values(6, 'p6', 45, 12, 2, null)
-
-select c.nombre, p.nombre, p.precio, p.existencia 
-from categoria as c --left
-full join Producto as p --right
-on c.idcatego = p.idcatego
-
-select *
-from categoria as c --left
-full join Producto as p --right
-on c.idcatego = p.idcatego
+(select nombre, precio, existencia, idcategoria from Producto) as p
+on p.idcategoria = c.idcategoria
+where p.idcategoria is null;
 
 
-select *from 
-Categoria as c
-left join producto as p
-on c.idcatego = p.idcatego
-inner join proveedor as pr
-on pr.idprov = p.proveedor;
+
+--right join
+select * from Categoria as c 
+right join Producto as p 
+on c.idcategoria = p.idcategoria;
 
 
-select *from 
-Categoria as c
-right join producto as p
-on c.idcatego = p.idcatego
-right join proveedor as pr
-on pr.idprov = p.proveedor;
+
+--full join
+select * from Categoria as c 
+full join Producto as p 
+on c.idcategoria = p.idcategoria;
 
 
-select *from 
-Categoria as c
-left join producto as p
-on c.idcatego = p.idcatego
-left join proveedor as pr
-on pr.idprov = p.proveedor;
 
-select *from 
-Categoria as c
-full join producto as p
-on c.idcatego = p.idcatego
-inner join proveedor as pr
-on pr.idprov = p.proveedor;
+--COnvinaciones entre inner join, left join, right join 
+select * from Categoria as c 
+full join Producto as p 
+on c.idcategoria = p.idcategoria
+inner join Proveedor as pr
+on pr.idProv = p.proveedor;
