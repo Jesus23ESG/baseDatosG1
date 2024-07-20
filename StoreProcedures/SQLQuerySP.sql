@@ -208,14 +208,16 @@ Select * from Customers
 create database etlempresa;
 use etlempresa; 
 
-CREATE TABLE cliente (
+CREATE TABLE cliente 
+(
     clienteid INT NOT NULL IDENTITY(1,1),
     clientebk NCHAR(5) NOT NULL,
     empresa NVARCHAR(40) NOT NULL,
     ciudad NVARCHAR(15) NOT NULL,
     region NVARCHAR(15) NOT NULL,
     pais NVARCHAR(15) NOT NULL,
-    constraint pk_clienteid primary key (clienteid);
+    constraint pk_clienteid primary key (clienteid)
+)
 
 exec sp_etl_carga_cliente
 
@@ -229,6 +231,7 @@ insert into etlempresa.dbo.cliente
 	left join etlempresa.dbo.cliente as etle
 	on nc.CustomerID = etle.clientebk
 	where etle.clientebk is null
+
 
 update cl
 	set cl.empresa = upper(c.CompanyName),
@@ -250,6 +253,7 @@ update cl
 
 end
 
+exec sp_etl_carga_cliente
 truncate table etlempresa.dbo.cliente
 
 create table producto
@@ -264,10 +268,10 @@ create table producto
 	primary key(productoid)
 )
 
-select * from NORTHWND.dbo.Products
-	select * from NORTHWND.dbo.Categories
-	select * from NORTHWND.dbo.Customers
-	select * from NORTHWND.dbo.Employees
+--select * from NORTHWND.dbo.Products
+	--select * from NORTHWND.dbo.Categories
+	--select * from NORTHWND.dbo.Customers
+	--select * from NORTHWND.dbo.Employees
 
 create or alter proc sp_etl_carga_producto
 AS
@@ -301,15 +305,6 @@ update p
 	--from NORTHWND.dbo.Customers as c
 	--inner join etlempresa.dbo.cliente as cl
 	--on c.CustomerID = cl.clientebk;
-
-	 select * from NORTHWND.dbo.Products
-	where ProductID = 2;
-
-	select * from etlempresa.dbo.producto
-	where productobk = 2;
-
-	update NORTHWND.dbo.Products 
-	set UnitsInStock = 20 where ProductID = 2
 end
 
 exec sp_etl_carga_producto
